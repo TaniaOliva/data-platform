@@ -8,3 +8,4 @@ Estas dudas se resuelven en la clase del jueves. Mientras tanto, el proyecto ava
 4. **Alcance:** ¿el recorte propuesto (un proceso de ventas, SCD Tipo 2 solo en cliente, dos reglas de alerta) cumple con los requisitos mínimos?
 5. **Formato de entrega:** ¿la documentación debe entregarse en Word con APA 7, en PDF, o como repositorio con README?
 6. **Versión de SQL Server:** ¿hay preferencia por SQL Server 2022, o se acepta otra versión?
+
