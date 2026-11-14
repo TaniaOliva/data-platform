@@ -1,0 +1,25 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.4, pytest-9.2.0, pluggy-1.7.0 -- C:\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: c:\Proyectos\data-platform
+collecting ... collected 17 items
+
+tests/test_rules.py::test_required_value_passes_when_all_present PASSED  [  5%]
+tests/test_rules.py::test_required_value_zero_is_not_null PASSED         [ 11%]
+tests/test_rules.py::test_required_value_reports_missing_columns PASSED  [ 17%]
+tests/test_rules.py::test_negative_qty_in_regular_invoice_fails PASSED   [ 23%]
+tests/test_rules.py::test_negative_qty_in_credit_note_passes PASSED      [ 29%]
+tests/test_rules.py::test_positive_qty_passes PASSED                     [ 35%]
+tests/test_rules.py::test_orphan_line_detected PASSED                    [ 41%]
+tests/test_rules.py::test_line_with_invoice_is_not_orphan PASSED         [ 47%]
+tests/test_rules.py::test_date_in_range_accepts_boundaries PASSED        [ 52%]
+tests/test_rules.py::test_date_out_of_range_fails PASSED                 [ 58%]
+tests/test_rules.py::test_valid_range PASSED                             [ 64%]
+tests/test_rules.py::test_evaluate_returns_one_violation_per_failed_rule PASSED [ 70%]
+tests/test_rules.py::test_evaluate_clean_rows_produce_nothing PASSED     [ 76%]
+tests/test_rules.py::test_every_source_rule_has_description PASSED       [ 82%]
+tests/test_rules.py::test_type_ddl_keeps_precision_and_length PASSED     [ 88%]
+tests/test_rules.py::test_build_merge_is_idempotent_by_design PASSED     [ 94%]
+tests/test_rules.py::test_date_dimension_covers_2013_to_2016 PASSED      [100%]
+
+============================= 17 passed in 0.17s ==============================
