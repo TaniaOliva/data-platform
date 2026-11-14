@@ -232,3 +232,25 @@ Este documento recoge cada decisión de diseño, la alternativa que se descartó
 **Decisión:** en `dim.DimProduct` las columnas `UnitPrice` y `TaxRate` se renombran a `CatalogUnitPrice` y `CatalogTaxRate`.
 
 **Motivo:** distinguir el catálogo actual del producto de los precios y tasas de cada venta, que viven en `fact.FactSales` (`UnitPrice`, `TaxRate`). Como `DimProduct` es SCD tipo 1, solo guarda el valor vigente del catálogo y no debe confundirse con el precio al que se vendió.
+
+## D-29. Supervivencia y fusión de versiones de cliente
+
+**Decisión:** `Sales.Customers_Archive` puede repetir la llave `(CustomerID, ValidFrom)` de la fila actual con una versión de largo cero (el cliente 890, por ejemplo). Al extraer, se conserva la fila con mayor `ValidTo` por llave. En `DimCustomer` (SCD tipo 2, D-21) las versiones consecutivas que no cambian ningún atributo rastreado (nombre, categoría, ruta de reparto, ciudad, estado y país) se fusionan en una sola.
+
+**Motivo:** D-18 pide una regla de supervivencia, pero `Customers` no tiene `LastEditedWhen`, así que se usa `ValidTo`. Sin ella el MERGE a raw falla por llave duplicada. La fusión evita versiones de dimensión sin cambios y deja una sola versión vigente por cliente sin cambios.
+
+**Alternativa descartada:** una versión de dimensión por cada fila del archivo, que llenaría `DimCustomer` de versiones idénticas.
+
+## D-30. Columnas que no se extraen a raw
+
+**Decisión:** además de `HashedPassword` y `Photo` (D-12), no se extraen las columnas espaciales (`geography`): `Location`, `Border` y `DeliveryLocation`. Los textos vacíos pasan a NULL en la zona clean y se muestran como "Desconocido" en ready, salvo `Brand` y `Size`, que conservan NULL (D-19).
+
+**Motivo:** ninguna métrica del alcance usa geometrías, y el tipo `geography` complica la comparación de cambios del MERGE. La ubicación se representa con ciudad, estado y país.
+
+## D-31. Carga por rangos con poca memoria
+
+**Decisión:** los MERGE e INSERT grandes (clean, ready y carga del DW) se ejecutan por rangos de 5,000 llaves y con `OPTION (MAXDOP 1, LOOP JOIN)`.
+
+**Motivo:** la instancia `.\SQLTANIA` trabaja con unos 9 MB de memoria de trabajo porque el equipo tiene poca memoria libre y comparte RAM con otras instancias de SQL Server y Oracle XE. Una consulta que pide una concesión mayor queda esperando indefinidamente (`RESOURCE_SEMAPHORE`). Por rangos, cada lote pide menos de 1 MB. El costo es una carga inicial más lenta, de unos cuatro minutos.
+
+**Alternativa descartada:** subir la memoria mínima de la instancia, que cambia la configuración del servidor y no resuelve la falta de memoria del equipo. Se documenta como recomendación de entorno.
